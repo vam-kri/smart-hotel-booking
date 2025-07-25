@@ -1,0 +1,10 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "Deploying GREEN stack..."
+      - aws cloudformation deploy \
+          --template-file ci-cd/codebuild/green-stack.yml \
+          --stack-name green-ecs-stack \
+          --capabilities CAPABILITY_NAMED_IAM

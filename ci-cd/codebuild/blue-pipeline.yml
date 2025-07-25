@@ -1,0 +1,10 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "Deploying BLUE stack..."
+      - aws cloudformation deploy \
+          --template-file ci-cd/codebuild/blue-stack.yml \
+          --stack-name blue-ecs-stack \
+          --capabilities CAPABILITY_NAMED_IAM
