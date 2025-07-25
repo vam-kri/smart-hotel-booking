@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: ECS Cluster and ECR
+
+Resources:
+  MyECRRepo:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: my-app-repo
+
+  MyECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: my-app-cluster

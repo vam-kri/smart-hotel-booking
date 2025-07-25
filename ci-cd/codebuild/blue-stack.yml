@@ -1,0 +1,8 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Blue Stack - Placeholder
+
+Resources:
+  BlueBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub green-stack-bucket-${AWS::AccountId}-${AWS::Region}

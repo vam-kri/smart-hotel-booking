@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - pip install cfn-lint
+
+  pre_build:
+    commands:
+      - echo "Linting templates..."
+      - cfn-lint ci-cd/codebuild/*.yml
+
+  build:
+    commands:
+      - echo "Deploying infra-vpc stack..."
+      - aws cloudformation deploy           --template-file ci-cd/codebuild/infra-vpc.yml           --stack-name infra-vpc-stack           --capabilities CAPABILITY_NAMED_IAM
+
+      - echo "Deploying infra-ecs stack..."
+      - aws cloudformation deploy           --template-file ci-cd/codebuild/infra-ecs.yml           --stack-name infra-ecs-stack           --capabilities CAPABILITY_NAMED_IAM
+
+  post_build:
+    commands:
+      - echo "Triggering child CodeBuild pipelines..."
+      - aws codebuild start-build --project-name green-stack-pipeline
+      - aws codebuild start-build --project-name blue-stack-pipeline
