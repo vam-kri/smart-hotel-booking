@@ -1,0 +1,12 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - pip install cfn-lint
+  build:
+    commands:
+      - echo "Linting CloudFormation templates..."
+      - cfn-lint ci-cd/codebuild/*.yml || true

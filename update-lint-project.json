@@ -1,0 +1,17 @@
+{
+  "name": "lint-cfn-project",
+  "source": {
+    "type": "CODEPIPELINE",
+    "buildspec": "ci-cd/lint-cfn/buildspec.yml"
+  },
+  "artifacts": {
+    "type": "CODEPIPELINE"
+  },
+  "environment": {
+    "type": "LINUX_CONTAINER",
+    "computeType": "BUILD_GENERAL1_SMALL",
+    "image": "aws/codebuild/standard:7.0",
+    "privilegedMode": false
+  },
+  "serviceRole": "arn:aws:iam::992313771121:role/CodeBuildInfraExecutionRole"
+}
