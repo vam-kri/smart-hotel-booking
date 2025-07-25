@@ -1,0 +1,112 @@
+{
+  "pipeline": {
+    "name": "smart-hotel-deploy-pipeline",
+    "roleArn": "arn:aws:iam::992313771121:role/CodePipelineServiceRole",
+    "artifactStore": {
+      "type": "S3",
+      "location": "codepipeline-us-east-2-my-simple-123"
+    },
+    "stages": [
+      {
+        "name": "Source",
+        "actions": [
+          {
+            "name": "SourceCodeCheckout",
+            "actionTypeId": {
+              "category": "Source",
+              "owner": "AWS",
+              "provider": "CodeStarSourceConnection",
+              "version": "1"
+            },
+            "runOrder": 1,
+            "configuration": {
+              "ConnectionArn": "arn:aws:codeconnections:us-east-2:992313771121:connection/5da13d8a-dcef-47ca-b4ec-17c35883de65",
+              "FullRepositoryId": "vam-kri/smart-hotel-booking",
+              "BranchName": "main",
+              "OutputArtifactFormat": "CODE_ZIP"
+            },
+            "outputArtifacts": [
+              {
+                "name": "SourceArtifact"
+              }
+            ],
+            "region": "us-east-2"
+          }
+        ]
+      },
+      {
+        "name": "LintCFN",
+        "actions": [
+          {
+            "name": "LintCloudFormation",
+            "actionTypeId": {
+              "category": "Build",
+              "owner": "AWS",
+              "provider": "CodeBuild",
+              "version": "1"
+            },
+            "runOrder": 1,
+            "configuration": {
+              "ProjectName": "lint-cfn-project"
+            },
+            "inputArtifacts": [
+              {
+                "name": "SourceArtifact"
+              }
+            ],
+            "region": "us-east-2"
+          }
+        ]
+      },
+      {
+        "name": "Build",
+        "actions": [
+          {
+            "name": "MainBuild",
+            "actionTypeId": {
+              "category": "Build",
+              "owner": "AWS",
+              "provider": "CodeBuild",
+              "version": "1"
+            },
+            "runOrder": 1,
+            "configuration": {
+              "ProjectName": "main-pipeline"
+            },
+            "inputArtifacts": [
+              {
+                "name": "SourceArtifact"
+              }
+            ],
+            "region": "us-east-2"
+          }
+        ]
+      },
+      {
+        "name": "Trigger",
+        "actions": [
+          {
+            "name": "FinalTrigger",
+            "actionTypeId": {
+              "category": "Build",
+              "owner": "AWS",
+              "provider": "CodeBuild",
+              "version": "1"
+            },
+            "runOrder": 1,
+            "configuration": {
+              "ProjectName": "trigger-project"
+            },
+            "inputArtifacts": [
+              {
+                "name": "SourceArtifact"
+              }
+            ],
+            "region": "us-east-2"
+          }
+        ]
+      }
+    ],
+    "version": 1
+  }
+}
